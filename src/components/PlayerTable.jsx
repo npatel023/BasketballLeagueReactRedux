@@ -18,7 +18,7 @@ const StyledTableCell = withStyles(() => ({
 
 const EmptyDataRow = () => (
     <TableRow>
-        <TableCell scope="row" >No Data</TableCell>
+        <TableCell scope="row" colSpan={4} style={{textAlign: 'center'}} >No Data</TableCell>
     </TableRow>
 )
 

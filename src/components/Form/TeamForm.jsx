@@ -108,7 +108,7 @@ function TeamForm({
     const handleSaveClick = () => {
         const errors = validateForm()
 
-        if (Object.keys(errors).length && errors.playerDetailErrors[0] !== false) {
+        if (Object.keys(errors).length) {
             setFormError(errors)
             return
         }
@@ -158,8 +158,11 @@ function TeamForm({
             return playerErrors
         })
 
-        if (playerDetailErrors.length) {
-            errors.playerDetailErrors = playerDetailErrors
+        for(let i = 0; i < playerDetailErrors; i++) {
+            if (typeof(playerDetailErrors[i]) === 'object') {
+                errors.playerDetailErrors = playerDetailErrors
+                break 
+            }
         }
 
         return errors
@@ -215,7 +218,7 @@ function TeamForm({
                         color="default"
                         variant="outlined"
                         onClick={() => addPlayer()}
-                        disabled={teamFormData.playerDetails.length === 14}
+                        disabled={teamFormData.playerDetails.length === 15}
                     >
                         Add Player
                     </Button>
