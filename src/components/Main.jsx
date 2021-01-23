@@ -4,9 +4,9 @@ import {
     makeStyles
 } from '@material-ui/core'
 
-import TeamFormContainer from '../containers/teamFormContainer'
-import TeamSelectContainer from '../containers/teamSelectContainer'
-import PlayerTableContainer from '../containers/playerTableContainer'
+import TeamFormContainer from '../containers/TeamFormContainer'
+import TeamSelectContainer from '../containers/TeamSelectContainer'
+import PlayerTableContainer from '../containers/PlayerTableContainer'
 
 const useStyles = makeStyles(() => ({
     container: {

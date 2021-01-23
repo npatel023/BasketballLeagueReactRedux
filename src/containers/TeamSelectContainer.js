@@ -10,9 +10,9 @@ import {
 } from '../store/actions/teamFormActions'
 
 const mapStateToProps = state => ({
-    selectedTeam: state.teamData.selectedTeam,
-    teams: state.teamData.teams,
-    teamFormData: state.teamForm.teamFormData
+    selectedTeam: state.teams.selectedTeam,
+    teams: state.teams.teams,
+    teamFormData: state.teamForm
 })
 
 const mapDispatchToProps = dispatch => ({
