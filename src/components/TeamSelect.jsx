@@ -1,65 +1,64 @@
-import React from 'react';
+import React from 'react'
 import {
     Select,
     InputLabel,
-    makeStyles,
     FormControl,
     Grid,
-    Button
+    Button,
+    makeStyles
 } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
-    teamFormControl: {
+    teamSelectFormControl: {
         minWidth: 120
-    },
-    buttonMarginLeft: {
-        marginLeft: 30
     },
     gridContainer: {
         marginBottom: 20
+    },
+    buttonMarginLeft: {
+        marginLeft: 30
     }
 }))
 
 function TeamSelect({
-    selectedTeam,
-    updateSelectedTeam,
     setIsTeamFormShown,
     teams,
-    populateTeamForm,
-    teamFormData
+    selectedTeam,
+    updateSelectedTeam,
+    populateTeamForm
 }) {
-    const { teamFormControl, buttonMarginLeft, gridContainer } = useStyles()
+    const { teamSelectFormControl, gridContainer, buttonMarginLeft } = useStyles()
 
     const handleTeamButtonClick = () => {
         if (selectedTeam) {
             populateTeamForm(teams.filter(team => team.teamName === selectedTeam)[0])
-        } else if (!selectedTeam && teamFormData.city) {
+        } else if (!selectedTeam) {
             populateTeamForm()
         }
+
         setIsTeamFormShown(true)
     }
 
     return (
-        <Grid 
-            className={gridContainer} 
-            container 
-            justify="center" 
+        <Grid
+            container
+            justify="center"
             alignItems="flex-end"
+            className={gridContainer}
         >
             <Grid>
-                <FormControl className={teamFormControl}>
-                    <InputLabel id="team-label-select">Team</InputLabel>
+                <FormControl className={teamSelectFormControl}>
+                    <InputLabel>Team</InputLabel>
                     <Select
                         native
                         labelId="team-label-select"
-                        id="team-select"
                         value={selectedTeam}
-                        onChange={e => updateSelectedTeam(e.target.value)}
+                        onChange={event => updateSelectedTeam(event.target.value)}
                     >
                         <option value="" />
                         {
-                            teams.length ?
-                            teams.map(({ teamName, city}) => (
+                            teams.length ? 
+                            teams.map(({teamName, city}) => (
                                 <option key={teamName} value={teamName}>{`${city} ${teamName}`}</option>
                             )) :
                             ""
@@ -67,15 +66,18 @@ function TeamSelect({
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid className={buttonMarginLeft}>
+            <Grid>
                 <Button
                     variant="contained"
                     disableElevation
                     color="primary"
+                    className={buttonMarginLeft}
                     onClick={handleTeamButtonClick}
                 >
                     {
-                        selectedTeam ? "EDIT TEAM" : "ADD TEAM"
+                        selectedTeam ?
+                        "EDIT TEAM" :
+                        "ADD TEAM"
                     }
                 </Button>
             </Grid>

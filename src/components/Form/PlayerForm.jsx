@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
     TextField,
     Grid,
@@ -11,78 +11,114 @@ import {
 } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
-    playerGrid: {
-        marginTop: 20
-    },
     deletePlayerButton: {
         textAlign: 'center',
-        minWidth: '40px'
+        minWidth: 20
     },
-    numberTextField: {
+    positionSelect: {
         position: 'relative',
-        bottom: '7px'
+        bottom: 7
+    },
+    gridContainer: {
+        marginTop: 20,
+        marginLeft: 1
     }
 }))
 
 function PlayerForm({
     playerDetails,
-    handlePlayerDetailChange,
     deletePlayer,
-    formError
+    updatePlayerDetails,
+    formErrors,
+    setFormErrors
 }) {
-    const {
-        playerGrid,
-        deletePlayerButton,
-        numberTextField
-    } = useStyles()
+    const { deletePlayerButton, positionSelect, gridContainer } = useStyles()
+
+    const handlePlayerDetailChange = (event, playerIndex, playerField) => {
+        if (typeof(formErrors) === 'object') {
+            setFormErrors(prevState => ({
+                ...prevState,
+                playerDetailErrors: formErrors.map((playerErrors, index) => {
+                    if (index === playerIndex) {
+                        return {
+                            ...playerErrors,
+                            [playerField]: ''
+                        }
+                    }
+
+                    return playerErrors
+                })
+            }))
+        }
+
+        updatePlayerDetails({
+            playerIndex,
+            playerKey: playerField,
+            playerValue: event.target.value
+        })
+    }
+
     return (
         <>
             {
                 playerDetails.map(({ playerName, playerNumber, playerPosition }, index) => (
-                    <Grid key={index} container spacing={2} className={playerGrid}>
-                        <Grid item xs={5}>
+                    <Grid
+                        key={index}
+                        className={gridContainer}
+                        container
+                        spacing={2}
+                    >
+                        <Grid
+                            item
+                            xs={5}
+                        >
                             <TextField
                                 label="Player Name"
                                 variant="outlined"
                                 size="small"
                                 fullWidth
-                                required={index === 0 ? true : false}
-                                onChange={(e) => handlePlayerDetailChange(e, index, 'playerName')}
+                                required
                                 value={playerName}
-                                error={formError && formError[index] && formError[index].hasOwnProperty('playerName') && formError[index].playerName}
-                                helperText={formError && formError[index] && formError[index].hasOwnProperty('playerName') ? formError[index].playerName : ''}
+                                onChange={event => handlePlayerDetailChange(event, index, 'playerName')}
+                                error={formErrors && formErrors[index] && formErrors[index].hasOwnProperty('playerName') && formErrors[index].playerName}
+                                helperText={formErrors && formErrors[index] && formErrors[index].hasOwnProperty('playerName') && formErrors[index].playerName}
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid
+                            item
+                            xs={3}
+                        >
                             <TextField
-                                type="Number"
                                 label="Number"
                                 variant="outlined"
+                                type="number"
                                 size="small"
                                 fullWidth
-                                required={index === 0 ? true : false}
+                                required
                                 value={playerNumber}
-                                onChange={(e) => handlePlayerDetailChange(e, index, 'playerNumber')}
-                                error={formError && formError[index] && formError[index].hasOwnProperty('playerNumber') && formError[index].playerNumber}
-                                helperText={formError && formError[index] && formError[index].hasOwnProperty('playerNumber') ? formError[index].playerNumber : ''}
+                                onChange={event => handlePlayerDetailChange(event, index, 'playerNumber')}
+                                error={formErrors && formErrors[index] && formErrors[index].hasOwnProperty('playerNumber') && formErrors[index].playerNumber}
+                                helperText={formErrors && formErrors[index] && formErrors[index].hasOwnProperty('playerNumber') && formErrors[index].playerNumber}
                             />
                         </Grid>
-                        <Grid item xs={3} className={numberTextField}>
-                            <FormControl 
-                                fullWidth 
+                        <Grid
+                            className={positionSelect}
+                            item
+                            xs={3}
+                        >
+                            <FormControl
+                                fullWidth
                                 size="small"
-                                error={formError && formError[index] && formError[index].hasOwnProperty('playerPosition')  && formError[index].playerPosition}
+                                error={formErrors && formErrors[index] && formErrors[index].hasOwnProperty('playerPosition') && formErrors[index].playerPosition}
+
                             >
-                                <InputLabel htmlFor={`team-form__player-position-${index}`}>Position</InputLabel>
+                                <InputLabel>Position</InputLabel>
                                 <Select
                                     native
-                                    inputProps={{
-                                        id: `team-form__player-position-${index}`
-                                    }}
                                     fullWidth
-                                    required={index === 0 ? true : false}
+                                    required
                                     value={playerPosition}
-                                    onChange={e => handlePlayerDetailChange(e, index, 'playerPosition')}
+                                    onChange={event => handlePlayerDetailChange(event, index, 'playerPosition')}
                                 >
                                     <option value="" disabled></option>
                                     <option value="PG">Point Guard</option>
@@ -91,18 +127,25 @@ function PlayerForm({
                                     <option value="PF">Power Forward</option>
                                     <option value="C">Center</option>
                                 </Select>
-                                <FormHelperText>{formError && formError[index] && formError[index].hasOwnProperty('playerPosition') ? formError[index].playerPosition : ''}</FormHelperText>
+                                <FormHelperText>
+                                    {
+                                        formErrors && formErrors[index] && formErrors[index].hasOwnProperty('playerPosition') ? formErrors[index].playerPosition : ''
+                                    }
+                                </FormHelperText>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={1}>
+                        <Grid
+                            item
+                            xs={1}
+                        >
                             <Button
-                                className={deletePlayerButton} disableElevation
                                 size="medium"
-                                onClick={() => deletePlayer(index)}
                                 disabled={index === 0}
+                                className={deletePlayerButton}
+                                onClick={() => deletePlayer(index)}
                             >
                                 X
-                        </Button>
+                    </Button>
                         </Grid>
                     </Grid>
                 ))

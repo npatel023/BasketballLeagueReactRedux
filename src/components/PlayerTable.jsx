@@ -1,24 +1,24 @@
 import React from 'react'
 import {
-    Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    Paper,
     withStyles
 } from '@material-ui/core'
 
 const StyledTableCell = withStyles(() => ({
     head: {
-        backgroundColor: '#eee',
+        backgroundColor: '#eee'
     }
 }))(TableCell)
 
 const EmptyDataRow = () => (
     <TableRow>
-        <TableCell scope="row" colSpan={4} style={{textAlign: 'center'}} >No Data</TableCell>
+        <TableCell scope="row" colSpan={4} style={{ textAlign: 'center' }} >No Data</TableCell>
     </TableRow>
 )
 
@@ -38,7 +38,7 @@ function PlayerTable({
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Player</StyledTableCell>
+                            <StyledTableCell align="center">Player</StyledTableCell>
                             <StyledTableCell align="center">Team</StyledTableCell>
                             <StyledTableCell align="center">Number</StyledTableCell>
                             <StyledTableCell align="center">Position</StyledTableCell>
@@ -47,36 +47,24 @@ function PlayerTable({
                     <TableBody>
                         {
                             teamData.length ?
-                                teamData.map(({
-                                    teamName,
-                                    city,
-                                    playerDetails
-                                }) => (
+                            (
+                                teamData.map(({teamName, city, playerDetails}) => (
                                     playerDetails.map(({
                                         playerName,
                                         playerNumber,
                                         playerPosition
                                     }, index) => (
                                         <TableRow key={index}>
-                                            <TableCell component="th" scope="row">
-                                                {playerName}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {`${city} ${teamName}`}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {playerNumber}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {playerPosition}
-                                            </TableCell>
+                                            <TableCell align="center" component="th" scope="row">{playerName}</TableCell>
+                                            <TableCell align="center">{`${city} ${teamName}`}</TableCell>
+                                            <TableCell align="center">{playerNumber}</TableCell>
+                                            <TableCell align="center">{playerPosition}</TableCell>
                                         </TableRow>
                                     ))
                                 ))
-                                :
-                                <EmptyDataRow />
+                            ) :
+                            <EmptyDataRow />
                         }
-
                     </TableBody>
                 </Table>
             </TableContainer>

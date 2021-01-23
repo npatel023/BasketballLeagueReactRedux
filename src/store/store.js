@@ -1,11 +1,12 @@
 import { createStore, combineReducers } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import teamReducer from './reducers/teamReducer'
+
 import teamFormReducer from './reducers/teamFormReducer'
+import teamReducer from './reducers/teamReducer'
 
 const rootReducer = combineReducers({
-    teamData: teamReducer,
-    teamForm: teamFormReducer
+    teamForm: teamFormReducer,
+    teams: teamReducer
 })
 
-export default createStore(rootReducer, composeWithDevTools())
+export default createStore(rootReducer, composeWithDevTools());

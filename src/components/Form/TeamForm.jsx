@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
     TextField,
     Grid,
@@ -12,96 +12,79 @@ import PlayerForm from './PlayerForm'
 
 const useStyles = makeStyles(() => ({
     formContainer: {
-        backgroundColor: '#fff',
-        padding: "25px 20px"
-    },
-    form: {
         maxWidth: 700,
-        margin: "auto",
-    },
-    buttonGrid: {
-        backgroundColor: '#fff',
-        padding: '15px 10px',
-        marginTop: 30
+        margin: "auto"
     },
     formTitle: {
         margin: "100px 20px 20px 10px"
     },
-    addPlayerButton: {
-        marginTop: 20
+    container: {
+        backgroundColor: '#fff',
+        padding: '25px 20px'
     },
-    deletePlayerButton: {
-        textAlign: 'center',
-        minWidth: '40px'
+    saveButtonGridContainer: {
+        backgroundColor: '#fff',
+        marginTop: 30,
+        padding: '15px 10px'
+    },
+    marginTop: {
+        marginTop: 20
     }
 }))
 
+
 function TeamForm({
     setIsTeamFormShown,
-    addTeam,
-    updateTeam,
+    updateTeamDetails,
     addPlayer,
     deletePlayer,
-    updateTeamDetails,
     updatePlayerDetails,
-    teamFormData,
+    addTeam,
+    updateTeam,
+    teamForm,
     selectedTeam
 }) {
     const {
-        form,
-        buttonGrid,
         formContainer,
         formTitle,
-        addPlayerButton,
+        container,
+        saveButtonGridContainer,
+        marginTop
     } = useStyles()
 
-    const [formError, setFormError] = useState({})
+    const [formErrors, setFormErrors] = useState({})
 
-    const handleTeamNameChange = e => {
-        if (formError.hasOwnProperty('teamName')) {
-            setFormError(prevState => ({
-                ...prevState,
-                teamName: ''
-            }))
-        }
-        updateTeamDetails({
-            teamKey: 'teamName',
-            teamValue: e.target.value
-        })
-    }
+    const {
+        city,
+        teamName,
+        playerDetails
+    } = teamForm
 
-    const handleTeamCityChange = e => {
-        if (formError.hasOwnProperty('city')) {
-            setFormError(prevState => ({
+    const onTeamCityChange = event => {
+        if (formErrors.hasOwnProperty('city')) {
+            setFormErrors(prevState => ({
                 ...prevState,
                 city: ''
             }))
         }
+
         updateTeamDetails({
             teamKey: 'city',
-            teamValue: e.target.value
+            teamValue: event.target.value
         })
     }
 
-    const handlePlayerDetailChange = (e, playerIndex, playerField) => {
-        if (formError.hasOwnProperty('playerDetailErrors')) {
-            setFormError((prevState) => ({
+    const onTeamNameChange = event => {
+        if (formErrors.hasOwnProperty('teamName')) {
+            setFormErrors(prevState => ({
                 ...prevState,
-                playerDetailErrors: formError.playerDetailErrors.map((player, index) => {
-                    if (index === playerIndex) {
-                        return {
-                            ...player,
-                            [playerField]: '',
-                        }
-                    }
-                    return player
-                })
+                teamName: ''
             }))
         }
-        updatePlayerDetails({
-            playerIndex,
-            playerKey: playerField,
-            playerValue: e.target.value
+
+        updateTeamDetails({
+            teamKey: 'teamName',
+            teamValue: event.target.value
         })
     }
 
@@ -109,59 +92,56 @@ function TeamForm({
         const errors = validateForm()
 
         if (Object.keys(errors).length) {
-            setFormError(errors)
+            setFormErrors(errors)
             return
         }
 
         if (selectedTeam) {
-            updateTeam(`${teamFormData.city}-${teamFormData.teamName}`, teamFormData)
+            updateTeam(`${city}-${teamName}`, teamForm)
         } else {
-            addTeam(teamFormData)
+            addTeam(teamForm)
         }
+
         setIsTeamFormShown(false)
     }
 
     const validateForm = () => {
-        const {
-            city,
-            teamName,
-            playerDetails
-        } = teamFormData
-
         const errors = {}
 
         if (!city) {
             errors.city = 'City is a required field'
         }
+
         if (!teamName) {
             errors.teamName = 'Team Name is a required field'
         }
-        
-        const playerDetailErrors = playerDetails.map(({ playerName, playerPosition, playerNumber}) => {
+
+        const playerDetailErrors = playerDetails.map(({ playerName, playerPosition, playerNumber }) => {
             const playerErrors = {}
 
             if (!playerName) {
-                playerErrors.playerName = 'Player Name is a required field'     
+                playerErrors.playerName = 'Player Name is a required field'
             }
+
             if (playerNumber < 0 || playerNumber === '') {
-                playerErrors.playerNumber = 'Player Number is a required field'     
-            } else if (playerNumber < 0) {
-                playerErrors.playerNumber = 'Player Number must be greater than or equal to 0'
+                playerErrors.playerNumber = 'Player Number is a required field'
             }
+
             if (!playerPosition) {
-                playerErrors.playerPosition = 'Player Position is a required field' 
+                playerErrors.playerPosition = 'Player Position is a required field'
             }
 
             if (Object.keys(playerErrors).length === 0) {
                 return false
             }
+
             return playerErrors
         })
 
-        for(let i = 0; i < playerDetailErrors; i++) {
-            if (typeof(playerDetailErrors[i]) === 'object') {
+        for (let i = 0; i < playerDetailErrors.length; i++) {
+            if (typeof (playerDetailErrors[i]) === 'object') {
                 errors.playerDetailErrors = playerDetailErrors
-                break 
+                break
             }
         }
 
@@ -169,11 +149,23 @@ function TeamForm({
     }
 
     return (
-        <form id="team-form" className={form}>
-            <Typography className={formTitle} variant="h5">Basketball Team</Typography>
-            <Container className={formContainer}>
-                <Grid container spacing={2} justify="space-between">
-                    <Grid item xs={6}>
+        <form className={formContainer} id="team-form">
+            <Typography
+                variant="h5"
+                className={formTitle}
+            >
+                Basketball Team
+            </Typography>
+            <Container className={container}>
+                <Grid
+                    container
+                    justify="space-between"
+                    spacing={2}
+                >
+                    <Grid
+                        item
+                        xs={6}
+                    >
                         <TextField
                             id="team-form__team-city"
                             label="Team City"
@@ -181,13 +173,16 @@ function TeamForm({
                             size="small"
                             fullWidth
                             required
-                            onChange={handleTeamCityChange}
-                            value={teamFormData.city}
-                            error={formError.hasOwnProperty('city') && formError.city}
-                            helperText={formError.hasOwnProperty('city') ? formError.city : ''}
+                            value={city}
+                            onChange={onTeamCityChange}
+                            error={formErrors.hasOwnProperty('city') && formErrors.city}
+                            helperText={formErrors.hasOwnProperty('city') && formErrors.city}
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid
+                        item
+                        xs={6}
+                    >
                         <TextField
                             id="team-form__team-name"
                             label="Team Name"
@@ -195,36 +190,41 @@ function TeamForm({
                             size="small"
                             fullWidth
                             required
-                            onChange={handleTeamNameChange}
-                            value={teamFormData.teamName}
-                            error={formError.hasOwnProperty('teamName') && formError.teamName}
-                            helperText={formError.hasOwnProperty('teamName') ? formError.teamName : ''}
+                            value={teamName}
+                            onChange={onTeamNameChange}
+                            error={formErrors.hasOwnProperty('teamName') && formErrors.teamName}
+                            helperText={formErrors.hasOwnProperty('teamName') && formErrors.teamName}
                         />
                     </Grid>
-                </Grid>
-                <PlayerForm 
-                    playerDetails={teamFormData.playerDetails}
-                    deletePlayer={deletePlayer}
-                    handlePlayerDetailChange={handlePlayerDetailChange}
-                    formError={formError.playerDetailErrors}
-                />
-                <Grid
-                    className={addPlayerButton}
-                    container
-                    justify="center"
-                >
-                    <Button
-                        size="small"
-                        color="default"
-                        variant="outlined"
-                        onClick={() => addPlayer()}
-                        disabled={teamFormData.playerDetails.length === 15}
+                    <PlayerForm
+                        playerDetails={playerDetails}
+                        deletePlayer={deletePlayer}
+                        updatePlayerDetails={updatePlayerDetails}
+                        formErrors={formErrors.hasOwnProperty('playerDetailErrors') ? formErrors.playerDetailErrors : false}
+                        setFormErrors={setFormErrors}
+                    />
+                    <Grid
+                        justify="center"
+                        container
                     >
-                        Add Player
-                    </Button>
+                        <Button
+                            className={marginTop}
+                            size="small"
+                            color="default"
+                            variant="outlined"
+                            onClick={() => addPlayer()}
+                            disabled={teamForm.playerDetails.length === 15}
+                        >
+                            ADD PLAYER
+                        </Button>
+                    </Grid>
                 </Grid>
             </Container>
-            <Grid className={buttonGrid} container justify="space-between">
+            <Grid
+                className={saveButtonGridContainer}
+                container
+                justify="space-between"
+            >
                 <Button
                     variant="outlined"
                     color="default"
@@ -242,7 +242,7 @@ function TeamForm({
                     Save Team
                 </Button>
             </Grid>
-        </form >
+        </form>
     )
 }
 

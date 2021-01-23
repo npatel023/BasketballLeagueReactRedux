@@ -1,46 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
     Container,
     makeStyles
 } from '@material-ui/core'
 
-import PlayerTableContainer from '../containers/PlayerTableContainer'
-import TeamSelectContainer from '../containers/TeamSelectContainer'
-import TeamFormContainer from '../containers/TeamFormContainer'
+import TeamFormContainer from '../containers/teamFormContainer'
+import TeamSelectContainer from '../containers/teamSelectContainer'
+import PlayerTableContainer from '../containers/playerTableContainer'
 
 const useStyles = makeStyles(() => ({
     container: {
         marginTop: 100,
         padding: "25px 20px",
         backgroundColor: "#fff"
-    },
-    hidden: {
-        display: 'none'
     }
 }))
 
 function Main() {
-    const { container, hidden } = useStyles()
+    const { container } = useStyles()
     const [isTeamFormShown, setIsTeamFormShown] = useState(false)
 
     return (
         <section>
-            <Container className={`${container} ${isTeamFormShown ? hidden : ''}`}>
-                <TeamSelectContainer
-                    setIsTeamFormShown={setIsTeamFormShown}
-                />
-                <PlayerTableContainer />
-            </Container>
             {
-                isTeamFormShown ? 
-                    <TeamFormContainer 
+                isTeamFormShown ?
+                    <TeamFormContainer
                         setIsTeamFormShown={setIsTeamFormShown}
-                    />
-                    : 
-                    null
+                    /> :
+                    (
+                        <Container className={container}>
+                            <TeamSelectContainer
+                                setIsTeamFormShown={setIsTeamFormShown}
+                            />
+                            <PlayerTableContainer />
+                        </Container>
+                    )
             }
         </section>
     )
 }
 
-export default Main
+export default Main;

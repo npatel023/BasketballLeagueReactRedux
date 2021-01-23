@@ -1,84 +1,75 @@
 import {
-    POPULATE_TEAM_FORM,
+    UPDATE_TEAM_DETAILS,
     ADD_PLAYER,
     DELETE_PLAYER,
     UPDATE_PLAYER_DETAILS,
-    UPDATE_TEAM_DETAILS
+    POPULATE_TEAM_FORM
 } from '../actionTypes/teamFormActionTypes'
 
 const initialState = {
-    teamFormData: {
-        id: 0, 
-        city: '',
-        teamName: '',
-        playerDetails: [{ 
-            playerName: '',
-            playerPosition: '',
-            playerNumber: ''
-        }]
-    }
+    id: 0,
+    city: '',
+    teamName: '',
+    playerDetails: [{
+        playerName: '',
+        playerNumber: '',
+        playerPosition: ''
+    }]
 }
+
 
 function teamFormReducer(state = initialState, action) {
     switch (action.type) {
+        case UPDATE_TEAM_DETAILS:
+            return {
+                ...state,
+                [action.payload.teamKey]: action.payload.teamValue
+            }
         case ADD_PLAYER:
             return {
                 ...state,
-                teamFormData: {
-                    ...state.teamFormData,
-                    playerDetails: [
-                        ...state.teamFormData.playerDetails,
-                        {
-                            playerName: '',
-                            playerNumber: '',
-                            playerPosition: ''
-                        }
-                    ]
-                }
+                playerDetails: [
+                    ...state.playerDetails,
+                    {
+                        playerName: '',
+                        playerNumber: '',
+                        playerPosition: ''
+                    }
+                ]
             }
         case DELETE_PLAYER:
             return {
                 ...state,
-                teamFormData: {
-                    ...state.teamFormData,
-                    playerDetails: state.teamFormData.playerDetails.filter((playerDetail, playerIndex) => playerIndex !== action.payload)
-                }
+                playerDetails: state.playerDetails.filter((playerDetail, playerIndex) => playerIndex !== action.payload)
+            }
+        case UPDATE_PLAYER_DETAILS:
+            return {
+                ...state,
+                playerDetails: state.playerDetails.map((playerDetail, index) => {
+                    if (index !== action.payload.playerIndex) {
+                        return playerDetail
+                    }
+
+                    return {
+                        ...playerDetail,
+                        [action.payload.playerKey]: action.payload.playerValue
+                    }
+                })
             }
         case POPULATE_TEAM_FORM:
             if (action.payload === undefined) {
                 return {
                     ...state,
-                    teamFormData: initialState.teamFormData
+                    city: initialState.city,
+                    teamName: initialState.teamName,
+                    playerDetails: initialState.playerDetails
                 }
             } else {
                 return {
                     ...state,
-                    teamFormData: action.payload
-                }
-            }
-        case UPDATE_TEAM_DETAILS:
-            return {
-                ...state,
-                teamFormData: {
-                    ...state.teamFormData,
-                    [action.payload.teamKey]: action.payload.teamValue
-                }
-            }
-        case UPDATE_PLAYER_DETAILS:
-            return {
-                ...state,
-                teamFormData: {
-                    ...state.teamFormData,
-                    playerDetails: state.teamFormData.playerDetails.map((playerDetail, index) => {
-                        if (index !== action.payload.playerIndex) {
-                            return playerDetail
-                        }
-
-                        return {
-                            ...playerDetail,
-                            [action.payload.playerKey]: action.payload.playerValue
-                        }
-                    })
+                    city: action.payload.city,
+                    teamName: action.payload.teamName,
+                    playerDetails: action.payload.playerDetails
                 }
             }
         default:
