@@ -14,9 +14,9 @@ const addTeam = team => ({
     payload: team
 })
 
-const updateTeam = (id, data) => ({
+const updateTeam = (id, teamData) => ({
     type: UPDATE_TEAM,
-    payload: { id, data }
+    payload: { id, teamData }
 })
 
 export {
