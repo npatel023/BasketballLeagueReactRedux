@@ -30,7 +30,8 @@ function PlayerForm({
     deletePlayer,
     updatePlayerDetails,
     formErrors,
-    setFormErrors
+    setFormErrors,
+    hasSelectedTeam
 }) {
     const { deletePlayerButton, positionSelect, gridContainer } = useStyles()
 
@@ -140,12 +141,12 @@ function PlayerForm({
                         >
                             <Button
                                 size="medium"
-                                disabled={index === 0}
+                                disabled={!hasSelectedTeam && index === 0}
                                 className={deletePlayerButton}
                                 onClick={() => deletePlayer(index)}
                             >
                                 X
-                    </Button>
+                            </Button>
                         </Grid>
                     </Grid>
                 ))

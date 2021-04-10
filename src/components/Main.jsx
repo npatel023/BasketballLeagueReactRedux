@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Container,
     makeStyles
@@ -16,9 +16,23 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-function Main() {
+function Main({
+    loadTeams
+}) {
     const { container } = useStyles()
     const [isTeamFormShown, setIsTeamFormShown] = useState(false)
+
+    useEffect(() => {
+        fetch('http://localhost:5000/getAllTeams')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if (data.success) {
+                loadTeams(data.teamData)
+            }
+        })
+        .catch(error => console.log(error))
+    }, [loadTeams])
 
     return (
         <section>

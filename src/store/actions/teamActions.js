@@ -1,7 +1,8 @@
 import {
     UPDATE_SELECTED_TEAM,
     ADD_TEAM,
-    UPDATE_TEAM
+    UPDATE_TEAM,
+    LOAD_TEAMS
 } from '../actionTypes/teamActionTypes'
 
 const updateSelectedTeam = value => ({
@@ -19,8 +20,14 @@ const updateTeam = (id, teamData) => ({
     payload: { id, teamData }
 })
 
+const loadTeams = teamData => ({
+    type: LOAD_TEAMS,
+    payload: teamData
+})
+
 export {
     updateSelectedTeam,
     addTeam,
-    updateTeam
+    updateTeam,
+    loadTeams
 }

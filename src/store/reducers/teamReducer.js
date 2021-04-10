@@ -1,7 +1,8 @@
 import {
     ADD_TEAM,
     UPDATE_SELECTED_TEAM,
-    UPDATE_TEAM
+    UPDATE_TEAM,
+    LOAD_TEAMS
 } from '../actionTypes/teamActionTypes'
 
 const initialState = {
@@ -27,13 +28,19 @@ function teamReducer(state = initialState, action) {
         case UPDATE_TEAM:
             return {
                 ...state,
+                selectedTeam: action.payload.teamData.teamName,
                 teams: state.teams.map((team) => {
-                    if (`${team.city}-${team.teamName}` === action.payload.id) {
+                    if (team.teamId === action.payload.id) {
                         return action.payload.teamData
                     }
 
                     return team
                 })
+            }
+        case LOAD_TEAMS:
+            return {
+                ...state,
+                teams: action.payload
             }
         default:
             return state

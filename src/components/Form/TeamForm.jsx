@@ -97,9 +97,47 @@ function TeamForm({
         }
 
         if (selectedTeam) {
-            updateTeam(`${city}-${teamName}`, teamForm)
+            fetch(
+                'http://localhost:5000/updateTeam',
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        teamData: teamForm
+                    })
+                }
+            )
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateTeam(data.team.teamId, data.team)
+                }
+            })
+            .catch(error => console.log(error))
         } else {
-            addTeam(teamForm)
+            fetch(
+                'http://localhost:5000/addTeam',
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'POST',
+                    body: JSON.stringify({
+                        teamData: teamForm
+                    })
+                }
+            )
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.success) {
+                        addTeam(data.team)
+                    }
+                })
+                .catch(error => console.log(error))
+
         }
 
         setIsTeamFormShown(false)
@@ -202,6 +240,7 @@ function TeamForm({
                         updatePlayerDetails={updatePlayerDetails}
                         formErrors={formErrors.hasOwnProperty('playerDetailErrors') ? formErrors.playerDetailErrors : false}
                         setFormErrors={setFormErrors}
+                        hasSelectedTeam={selectedTeam ? true : false}
                     />
                     <Grid
                         justify="center"

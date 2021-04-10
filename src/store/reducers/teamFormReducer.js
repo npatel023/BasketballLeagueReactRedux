@@ -7,10 +7,11 @@ import {
 } from '../actionTypes/teamFormActionTypes'
 
 const initialState = {
-    id: 0,
+    teamId: 0,
     city: '',
     teamName: '',
     playerDetails: [{
+        playerId: 0,
         playerName: '',
         playerNumber: '',
         playerPosition: ''
@@ -31,6 +32,7 @@ function teamFormReducer(state = initialState, action) {
                 playerDetails: [
                     ...state.playerDetails,
                     {
+                        playerId: 0,
                         playerName: '',
                         playerNumber: '',
                         playerPosition: ''
@@ -67,6 +69,7 @@ function teamFormReducer(state = initialState, action) {
             } else {
                 return {
                     ...state,
+                    teamId: action.payload.teamId,
                     city: action.payload.city,
                     teamName: action.payload.teamName,
                     playerDetails: action.payload.playerDetails

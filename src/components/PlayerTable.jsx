@@ -26,7 +26,6 @@ function PlayerTable({
     teams,
     selectedTeam
 }) {
-
     let teamData = teams
     if (selectedTeam) {
         teamData = teams.filter(team => selectedTeam === team.teamName)
